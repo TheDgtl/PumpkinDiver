@@ -30,6 +30,7 @@ public class PumpkinDiverPlayerListener extends PlayerListener{
 			return;
 		}
 		//Check to see if we have changed our helmet
+		
 		final int currentAir = PumpkinDiver.server.getPlayer(name).getRemainingAir();
 		final boolean wearingDivingHelmet = PumpkinDiver.server.getPlayer(name).getInventory().getHelmet().getTypeId() == Material.PUMPKIN.getId();
 		if (wearingDivingHelmet) {
@@ -39,30 +40,28 @@ public class PumpkinDiverPlayerListener extends PlayerListener{
 			PumpkinDiver.server.getPlayer(name).setMaximumAir(300);
 		}
 		
-		new Thread() {
+		Thread update = new Thread() {
 			public void run() {
 				try {
-					sleep(150);
 					Player player = PumpkinDiver.server.getPlayer(name);
 					if (currentAir != player.getRemainingAir()) {
 						onRemainingAirChange(player, currentAir);
 					}
 					if (wearingDivingHelmet && player.getInventory().getHelmet().getTypeId() != Material.PUMPKIN.getId()) {
 						player.setMaximumAir(300);
+						player.setRemainingAir(player.getRemainingAir() > 300 ? 300 : player.getRemainingAir());
 					}
 					else if (!wearingDivingHelmet && player.getInventory().getHelmet().getTypeId() == Material.PUMPKIN.getId()) {
 						player.setMaximumAir(3000);
 					}
 					doPumpkinDiver(name);
 				}
-				catch (InterruptedException e) {
-					doPumpkinDiver(name);
-				}
 				catch (NullPointerException e) {
 					players.remove(name);
 				}
 			}
-		}.start();
+		};
+		PumpkinDiver.server.getScheduler().scheduleSyncDelayedTask(PumpkinDiver.instance, update, 7);
 	}
 
 	public static void onRemainingAirChange(Player player, int old) {
