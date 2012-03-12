@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PumpkinDiverPlayerListener extends PlayerListener{
+public class PumpkinDiverPlayerListener implements Listener {
 	private static ArrayList<String> players = new ArrayList<String>(50);
-	
+
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (!players.contains(event.getPlayer().getName())) {
 			players.add(event.getPlayer().getName());
