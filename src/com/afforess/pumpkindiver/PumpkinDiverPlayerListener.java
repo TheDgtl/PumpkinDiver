@@ -22,8 +22,9 @@ public class PumpkinDiverPlayerListener implements Listener {
     }
 	
 	public static void doPumpkinDiver(final String name) {
+		Player player = PumpkinDiver.server.getPlayer(name);
 		//Check to see if this player is online
-		if (PumpkinDiver.server.getPlayer(name) == null) {
+		if (player == null) {
 			players.remove(name);
 			return;
 		}
@@ -33,9 +34,8 @@ public class PumpkinDiverPlayerListener implements Listener {
 			return;
 		}
 		//Check to see if we have changed our helmet
-		
-		final int currentAir = PumpkinDiver.server.getPlayer(name).getRemainingAir();
-		final boolean wearingDivingHelmet = PumpkinDiver.server.getPlayer(name).getInventory().getHelmet().getTypeId() == Material.PUMPKIN.getId();
+		final int currentAir = player.getRemainingAir();
+		final boolean wearingDivingHelmet = (player.getInventory().getHelmet() != null && player.getInventory().getHelmet().getTypeId() == Material.PUMPKIN.getId());
 		if (wearingDivingHelmet) {
 			PumpkinDiver.server.getPlayer(name).setMaximumAir(3000);
 		}
